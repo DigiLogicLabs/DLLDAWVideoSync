@@ -1,6 +1,6 @@
 # DLL DAW VideoSync
 
-A free, open-source VST3 video transport plugin by [Digi Logic Labs LLC](https://digilogiclabs.com).
+A free, open-source video transport plugin for DAWs by [Digi Logic Labs LLC](https://digilogiclabs.com). Supports VST3, CLAP, Audio Unit (AUv2/AUv3), AAX, VST2, and standalone formats via [iPlug2](https://github.com/iPlug2/iPlug2).
 
 Load a video file (.mp4, .mov, .avi) in your DAW and it syncs playback to the host timeline — built for sound designers, composers, and post-production workflows.
 
@@ -52,16 +52,28 @@ Visit [digilogiclabs.com](https://digilogiclabs.com) for the latest download lin
 - State serialization (video path saved with your DAW session)
 - Supports .mp4, .mov, .avi, .mkv, .wmv, .webm formats
 
-## Supported Hosts
+## Supported Platforms and Formats
 
-Tested and confirmed working in **Ableton Live** on Windows x64. Should work in any VST3-compatible DAW including FL Studio, Reaper, Cubase, Studio One, Bitwig, and others.
+| Format | Windows (x64) | macOS | iOS |
+|--------|:---:|:---:|:---:|
+| **VST3** | Built & tested | Xcode project included | — |
+| **CLAP** | Project included | Xcode scheme included | — |
+| **Audio Unit (AUv2)** | — | Xcode scheme included | — |
+| **AUv3 (App Extension)** | — | Xcode scheme included | Xcode project included |
+| **AAX** | Project included | Xcode scheme included | — |
+| **VST2** | Project included | Xcode scheme included | — |
+| **Standalone App** | Project included | Xcode scheme included | Xcode project included |
+| **WAM (Web Audio)** | — | Makefile included | — |
+
+**Pre-built binary:** Windows x64 VST3 only (see [Releases](../../releases)).
+
+**Tested and confirmed:** Ableton Live on Windows x64. Should work in any VST3-compatible DAW including FL Studio, Reaper, Cubase, Studio One, Bitwig, and others. macOS and iOS builds require Xcode and have not yet been tested — contributions welcome.
 
 ## Building from Source
 
-### Prerequisites
+### Prerequisites (All Platforms)
 
-- **Visual Studio 2022** (or later) with the C++ desktop development workload
-- **iPlug2** framework — the project expects iPlug2 at `../../external/iPlug2` relative to this folder. To set this up:
+- **iPlug2** framework — the project expects iPlug2 at `../../external/iPlug2` relative to this folder:
   ```bash
   # From the parent directory of this repo
   mkdir -p external
@@ -76,7 +88,9 @@ Tested and confirmed working in **Ableton Live** on Windows x64. Should work in 
   ```
   This directory should contain `pluginterfaces/`, `public.sdk/`, and a `CMakeLists.txt`. You can download the SDK from [Steinberg's developer portal](https://www.steinberg.net/developers/) or use the iPlug2 download script.
 
-### Build Steps
+### Windows (Visual Studio)
+
+**Requires:** Visual Studio 2022 (or later) with the C++ desktop development workload.
 
 1. Open `DLLDAWVideoSync.sln` in Visual Studio 2022
 2. Select **Release | x64** from the configuration dropdown
@@ -90,12 +104,27 @@ Tested and confirmed working in **Ableton Live** on Windows x64. Should work in 
    build-win/DLLDAWVideoSync.vst3/Contents/x86_64-win/DLLDAWVideoSync.vst3
    ```
 
-### Install After Building
+Other Windows build targets available in the solution: `DLLDAWVideoSync-clap`, `DLLDAWVideoSync-vst2`, `DLLDAWVideoSync-aax`, `DLLDAWVideoSync-app` (standalone).
 
-Copy the built `.vst3` file to:
-```
-C:\Program Files\Common Files\VST3\
-```
+**Install:** Copy the built `.vst3` file to `C:\Program Files\Common Files\VST3\`
+
+### macOS (Xcode)
+
+**Requires:** Xcode with command-line tools installed.
+
+1. Open `projects/DLLDAWVideoSync-macOS.xcodeproj` in Xcode
+2. Select a scheme from the scheme dropdown — available schemes:
+   - **macOS-VST3**, **macOS-AUv2**, **macOS-AUv3**, **macOS-CLAP**, **macOS-VST2**, **macOS-AAX**, **macOS-APP** (standalone)
+   - **All macOS** (builds all formats at once)
+3. Build with **Product > Build** (Cmd+B)
+
+**Install:** Copy the built `.vst3` to `~/Library/Audio/Plug-Ins/VST3/` or the `.component` to `~/Library/Audio/Plug-Ins/Components/`
+
+### iOS (Xcode)
+
+1. Open `projects/DLLDAWVideoSync-iOS.xcodeproj` in Xcode
+2. Select the **iOS-APP with AUv3** or **iOS-AUv3** scheme
+3. Build for a device or simulator
 
 ### Optional: VLC SDK for Extended Codec Support
 
@@ -111,27 +140,47 @@ See [`setup_vlc_sdk.md`](setup_vlc_sdk.md) for detailed VLC SDK integration inst
 
 ```
 DLLDAWVideoSync/
-├── DLLDAWVideoSync.h          # Plugin header (main class)
-├── DLLDAWVideoSync.cpp         # Plugin implementation
-├── config.h                    # iPlug2 plugin configuration
-├── VLC_Config.h                # VLC SDK toggle and config
-├── config/                     # Platform-specific build configs
+├── DLLDAWVideoSync.h           # Plugin header (main class)
+├── DLLDAWVideoSync.cpp          # Plugin implementation (~2500 lines)
+├── config.h                     # iPlug2 plugin configuration
+├── VLC_Config.h                 # VLC SDK toggle and config
+├── setup_vlc_sdk.md             # Detailed VLC SDK setup guide
+├── DLLDAWVideoSync.sln          # Visual Studio solution (Windows)
+├── DLLDAWVideoSync.xcworkspace/ # Xcode workspace (macOS)
+├── config/                      # Platform-specific build configs
 │   ├── DLLDAWVideoSync-win.props
 │   ├── DLLDAWVideoSync-mac.xcconfig
 │   └── DLLDAWVideoSync-ios.xcconfig
-├── projects/                   # IDE project files
-│   ├── DLLDAWVideoSync-vst3.vcxproj
-│   ├── DLLDAWVideoSync-app.vcxproj
-│   └── ...
-├── resources/                  # UI resources, icons, plists
-├── releases/                   # Pre-built binaries
+├── projects/                    # IDE project files
+│   ├── DLLDAWVideoSync-vst3.vcxproj      # Windows VST3
+│   ├── DLLDAWVideoSync-clap.vcxproj      # Windows CLAP
+│   ├── DLLDAWVideoSync-vst2.vcxproj      # Windows VST2
+│   ├── DLLDAWVideoSync-aax.vcxproj       # Windows AAX
+│   ├── DLLDAWVideoSync-app.vcxproj       # Windows standalone
+│   ├── DLLDAWVideoSync-macOS.xcodeproj/  # macOS (all formats)
+│   ├── DLLDAWVideoSync-iOS.xcodeproj/    # iOS AUv3
+│   ├── DLLDAWVideoSync-wam-*.mk          # Web Audio Module
+│   ├── config/                            # Per-project build configs
+│   ├── scripts/                           # Build helper scripts
+│   └── resources/                         # Fonts and assets
+├── scripts/                     # Build and packaging scripts
+│   ├── postbuild-win.bat
+│   ├── prebuild-win.bat
+│   ├── prepare_resources-*.py   # Resource prep (win, mac, ios)
+│   └── makedist-web.sh
+├── resources/                   # UI resources, icons, plists
+│   ├── DLLDAWVideoSync.ico      # Windows icon
+│   ├── DLLDAWVideoSync.icns     # macOS icon
+│   ├── main.rc                  # Windows resource script
+│   ├── *-Info.plist             # macOS/iOS bundle info
+│   └── Images.xcassets/         # iOS app icons
+├── releases/                    # Pre-built binaries
 │   └── v1.0.0/DLLDAWVideoSync.vst3
-├── LICENSES/                   # Third-party license texts
+├── LICENSES/                    # Third-party license texts
 │   ├── THIRD_PARTY.md
 │   ├── STEINBERG_VST3_NOTICE.txt
 │   └── LGPL-2.1.txt
-├── LICENSE                     # GPL v3 (this project)
-└── DLLDAWVideoSync.sln        # Visual Studio solution
+└── LICENSE                      # GPL v3 (this project)
 ```
 
 ## License
