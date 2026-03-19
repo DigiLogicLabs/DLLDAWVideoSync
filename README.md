@@ -4,6 +4,8 @@ A free, open-source video transport plugin for DAWs by [Digi Logic Labs LLC](htt
 
 Load a video file (.mp4, .mov, .avi) in your DAW and it syncs playback to the host timeline — built for sound designers, composers, and post-production workflows.
 
+![DLL DAW VideoSync running in Ableton Live](assets/demo.gif)
+
 ## Download (Pre-Built)
 
 If you just want to use the plugin without building from source, grab the latest release:

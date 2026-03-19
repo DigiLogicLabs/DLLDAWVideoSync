@@ -44,3 +44,6 @@ gui/
 .claude/
 .vscode/
 nul
+
+# Source video recordings (raw OBS captures)
+vid-ref/
