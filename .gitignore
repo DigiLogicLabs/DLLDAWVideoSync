@@ -1,0 +1,46 @@
+# Build output
+build-*/
+*.exe
+*.dll
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.lib
+
+# Exclude built VST3 files everywhere EXCEPT the releases folder
+*.vst3
+!releases/**/*.vst3
+
+# Visual Studio
+*.vs/
+*.sdf
+*.opensdf
+*.suo
+*.ncb
+*.vcproj.*
+*.user
+ipch/
+.vs/
+
+# macOS / Xcode
+*.xcuserdata
+*.xcschememanagement.plist
+*.pkg
+*.dmg
+*.mode1v3
+.DS_Store
+Icon?
+
+# Misc
+*.zip
+*.depend
+*.layout
+*.db
+*.LSOverride
+gui/
+
+# Local editor/tool config
+.claude/
+.vscode/
+nul

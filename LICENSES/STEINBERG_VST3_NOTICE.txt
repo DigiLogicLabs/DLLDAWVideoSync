@@ -1,0 +1,3 @@
+This product uses the VST3 SDK licensed under the GNU General Public License v3.
+VST is a trademark of Steinberg Media Technologies GmbH.
+https://www.steinberg.net/developers/
